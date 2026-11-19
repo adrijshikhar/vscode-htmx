@@ -56,12 +56,13 @@ jobs:
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
+          VSIX_FILE=$(ls vscode-htmx-*.vsix | head -n 1)
           if [ -n "$VSCE_PAT" ]; then
             echo "Publishing using VSCE_PAT secret..."
-            npx --yes @vscode/vsce publish -p "$VSCE_PAT" --no-git-tag-version --no-dependencies
+            npx --yes @vscode/vsce publish --packagePath "$VSIX_FILE" -p "$VSCE_PAT" --no-git-tag-version --no-dependencies
           else
             echo "Publishing using Trusted Publishing (OIDC)..."
-            npx --yes @vscode/vsce publish --no-git-tag-version --no-dependencies
+            npx --yes @vscode/vsce publish --packagePath "$VSIX_FILE" --no-git-tag-version --no-dependencies
           fi
 
       - name: Publish to Open VSX Registry (optional)
