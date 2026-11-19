@@ -62,11 +62,15 @@ jobs:
           fi
 
       - name: Publish to Open VSX Registry (optional)
-        if: ${{ (github.event.inputs.target == null || github.event.inputs.target == 'all' || github.event.inputs.target == 'openvsx') && secrets.OVSX_PAT != '' }}
+        if: ${{ github.event.inputs.target == null || github.event.inputs.target == 'all' || github.event.inputs.target == 'openvsx' }}
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
         run: |
-          npx --yes ovsx publish --packagePath $(ls vscode-htmx-*.vsix) -p "$OVSX_PAT"
+          if [ -n "$OVSX_PAT" ]; then
+            npx --yes ovsx publish --packagePath $(ls vscode-htmx-*.vsix) -p "$OVSX_PAT"
+          else
+            echo "OVSX_PAT not set; skipping Open VSX publish."
+          fi
 
       - name: Create GitHub Release with VSIX Asset
         if: startsWith(github.ref, 'refs/tags/v')
