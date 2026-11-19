@@ -3,7 +3,7 @@
   "displayName": "HTMX",
   "description": "High-performance HTMX 2.0 language server powered by htmx-analyzer (autocompletion, target navigation, hover docs, diagnostics, quick-fixes)",
   "version": "0.1.0",
-  "publisher": "adrijshikhar",
+  "publisher": "nemesis",
   "engines": {
     "vscode": "^1.90.0"
   },
