@@ -1,0 +1,114 @@
+{
+  "name": "vscode-htmx",
+  "displayName": "HTMX",
+  "description": "High-performance HTMX 2.0 language server powered by htmx-analyzer (autocompletion, target navigation, hover docs, diagnostics, quick-fixes)",
+  "version": "0.1.0",
+  "publisher": "adrijshikhar",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Snippets"
+  ],
+  "keywords": [
+    "htmx",
+    "htmx2",
+    "html",
+    "lsp",
+    "language-server"
+  ],
+  "homepage": "https://github.com/adrijshikhar/vscode-htmx",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrijshikhar/vscode-htmx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adrijshikhar/vscode-htmx/issues"
+  },
+  "license": "Apache-2.0",
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:html",
+    "onLanguage:htmldjango",
+    "onLanguage:jinja",
+    "onLanguage:jinja-html",
+    "onLanguage:php",
+    "onLanguage:blade",
+    "onLanguage:erb",
+    "onLanguage:astro",
+    "onLanguage:svelte",
+    "onLanguage:vue",
+    "onLanguage:templ"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "htmx.restartServer",
+        "title": "HTMX: Restart Language Server",
+        "category": "HTMX"
+      },
+      {
+        "command": "htmx.downloadServer",
+        "title": "HTMX: Download / Update Language Server Binary",
+        "category": "HTMX"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "HTMX",
+      "properties": {
+        "htmx.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable HTMX language intelligence."
+        },
+        "htmx.server.path": {
+          "type": "string",
+          "default": "",
+          "description": "Optional custom path to the `htmx-analyzer` executable. If empty, the extension checks PATH and falls back to auto-downloading."
+        },
+        "htmx.diagnostics.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable real-time HTMX static analysis and diagnostics."
+        },
+        "htmx.diagnostics.severity": {
+          "type": "object",
+          "default": {},
+          "description": "Custom rule severities (e.g. `{\"HTMX001\": \"warning\", \"HTMX004\": \"hint\"}`)."
+        },
+        "htmx.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the HTMX language server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "build": "node esbuild.js",
+    "package": "node esbuild.js --production",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "^1.90.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.0"
+  }
+}
