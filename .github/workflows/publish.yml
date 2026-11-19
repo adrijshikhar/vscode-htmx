@@ -39,6 +39,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Build extension bundle
+        run: npm run build
+
       - name: Run unit & integration tests
         run: npm test
 
