@@ -13,10 +13,10 @@ export interface BinaryInfo {
   version?: string;
 }
 
-export function getPlatformAssetName(): string | null {
-  const platform = process.platform;
-  const arch = process.arch;
-
+export function getPlatformAssetName(
+  platform: string = process.platform,
+  arch: string = process.arch
+): string | null {
   if (platform === 'darwin') {
     if (arch === 'arm64') return 'htmx-analyzer-darwin-arm64';
     if (arch === 'x64') return 'htmx-analyzer-darwin-x64';
@@ -80,6 +80,12 @@ function httpsGet(url: string, headers: Record<string, string> = {}): Promise<Bu
   });
 }
 
+export function verifyChecksum(buffer: Buffer, expectedSha: string): boolean {
+  const cleanExpected = expectedSha.trim().split(/\s+/)[0].toLowerCase();
+  const actualSha = crypto.createHash('sha256').update(buffer).digest('hex').toLowerCase();
+  return actualSha === cleanExpected;
+}
+
 export async function downloadServerBinary(
   context: vscode.ExtensionContext,
   force: boolean = false
@@ -134,13 +140,8 @@ export async function downloadServerBinary(
       if (sha256Asset) {
         progress.report({ message: 'Verifying checksum...' });
         const sha256Buffer = await httpsGet(sha256Asset.browser_download_url);
-        const expectedSha = sha256Buffer.toString('utf-8').trim().split(/\s+/)[0].toLowerCase();
-        const actualSha = crypto.createHash('sha256').update(binaryBuffer).digest('hex').toLowerCase();
-
-        if (expectedSha !== actualSha) {
-          throw new Error(
-            `SHA-256 verification failed for ${assetName}.\nExpected: ${expectedSha}\nActual:   ${actualSha}`
-          );
+        if (!verifyChecksum(binaryBuffer, sha256Buffer.toString('utf-8'))) {
+          throw new Error(`SHA-256 verification failed for ${assetName}.`);
         }
       }
 
